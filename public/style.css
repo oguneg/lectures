@@ -109,7 +109,7 @@ button.link { background: none; border: none; color: var(--accent); padding: 0; 
 
 .crumbs { color: var(--muted); margin: 8px 0 0; font-size: 0.92rem; }
 .flash { background: var(--accent-soft); border-radius: var(--radius); padding: 10px 14px; }
-.flash.error { border-left: 3px solid var(--accent); }
+.flash.error { border: 1px solid var(--accent); color: var(--accent); }
 
 .summary {
   display: flex; gap: 32px; align-items: center; flex-wrap: wrap;

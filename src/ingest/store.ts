@@ -108,13 +108,14 @@ export async function saveTeachings(db: Db, universityId: string, teachings: Tea
     for (const r of rows) lecturers.set(r.nameKey, r.id);
   }
 
-  const rows = matched.map((t) => ({
-    courseId: ids.get(t.code)!,
-    lecturerId: lecturers.get(nameKey(t.name))!,
-    semester: t.semester,
-    role: t.role,
-    sourceUrl: t.sourceUrl,
-  }));
+  // The same teaching is often listed twice (the Swedish and English page); one upsert may not touch a row twice.
+  const unique = new Map<string, { courseId: number; lecturerId: number; semester: string; role: string; sourceUrl: string }>();
+  for (const t of matched) {
+    const row = { courseId: ids.get(t.code)!, lecturerId: lecturers.get(nameKey(t.name))!, semester: t.semester, role: t.role, sourceUrl: t.sourceUrl };
+    const key = `${row.courseId}|${row.lecturerId}|${row.semester}|${row.role}`;
+    if (!unique.has(key)) unique.set(key, row);
+  }
+  const rows = [...unique.values()];
   for (const batch of chunks(rows)) {
     await db
       .insert(teaching)
