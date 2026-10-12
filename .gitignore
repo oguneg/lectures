@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.env
+.env*.local
+*.tsbuildinfo
+coverage/
+# Local dev database (PGlite)
+.data/
+# Raw API/page responses cached by `npm run ingest`
+.cache/
